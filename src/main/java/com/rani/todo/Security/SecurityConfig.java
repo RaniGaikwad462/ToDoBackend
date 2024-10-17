@@ -36,7 +36,7 @@ public class SecurityConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         var admin = User.withUsername("admin")
-                .password(passwordEncoder().encode("adminpass"))
+                .password(passwordEncoder().encode("admin"))
                 .roles("ADMIN")
                 .build();
 
