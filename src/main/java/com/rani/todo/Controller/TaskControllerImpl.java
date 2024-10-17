@@ -75,6 +75,7 @@ public class TaskControllerImpl implements TaskController {
     @GetMapping
     public List<Task> getAllTasks() {
         log.info("Fetching all tasks");
+        log.warn("Pagination is not enabled");
         return taskService.getAllTasks();
     }
 
