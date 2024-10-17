@@ -58,6 +58,7 @@ public class TaskControllerImpl implements TaskController {
     @GetMapping("/admin")
     public ResponseEntity<String> hiAdmin() {
         log.info("Greeting admin");
+        log.warn("You are admin");
         return ResponseEntity.ok("Hello from Admin");
     }
 
