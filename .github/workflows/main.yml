@@ -1,0 +1,41 @@
+name: Deploy Spring Boot to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Check out the repository
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Set up SSH agent and add the EC2 key
+    - name: Setup SSH agent
+      uses: webfactory/ssh-agent@v0.5.4
+      with:
+        ssh-private-key: ${{ secrets.EC2_KEY }}
+
+    # Run commands on EC2 to pull the latest code and restart the app
+    - name: Deploy to EC2
+      run: |
+        ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+          # Navigate to the project directory
+          cd /home/ec2-user/ToDoBackend
+          
+          # Pull the latest code from the GitHub repository
+          git pull origin main
+          
+          # Stop the current Spring Boot app (adjust according to how you're running it)
+          pkill -f 'java'
+
+          # Build the project using Maven
+          mvn clean package
+
+          # Restart the Spring Boot application
+          nohup mvn spring-boot:run > log.txt 2>&1 &
+        EOF
